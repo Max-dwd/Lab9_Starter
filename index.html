@@ -102,6 +102,141 @@
 
     // Start your code here
     // You may move this JS to another file if you wish
+        // Start your code here
+    const [
+      logBtn, errorBtn, countBtn, warnBtn, assertBtn, clearBtn,
+      dirBtn, dirxmlBtn, groupStartBtn, groupEndBtn, tableBtn,
+      startTimerBtn, endTimerBtn, traceBtn, globalErrorBtn
+    ] = errorBtns;
+
+    const users = [
+      { id: 1, name: 'Alice', role: 'Admin' },
+      { id: 2, name: 'Bob', role: 'Editor' },
+      { id: 3, name: 'Charlie', role: 'Viewer' }
+    ];
+
+    logBtn.addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+
+    errorBtn.addEventListener('click', () => {
+      console.error(new Error('Console Error Demo – something went wrong!'));
+    });
+
+    countBtn.addEventListener('click', () => {
+      console.count('Console Count Demo');
+    });
+
+    warnBtn.addEventListener('click', () => {
+      console.warn('Console Warn Demo – this is only a warning');
+    });
+
+    assertBtn.addEventListener('click', () => {
+      console.assert(false, 'Console Assert Demo – forced failure for demonstration');
+    });
+
+    clearBtn.addEventListener('click', () => {
+      console.clear();
+    });
+
+    dirBtn.addEventListener('click', () => {
+      console.dir(document.body);
+    });
+
+    dirxmlBtn.addEventListener('click', () => {
+      console.dirxml(document.body);
+    });
+
+    groupStartBtn.addEventListener('click', () => {
+      console.group('Console Group Demo');
+      console.log('Inside the group...');
+      console.groupCollapsed('Nested group');
+      console.log('Nested item 1');
+      console.log('Nested item 2');
+      console.groupEnd();           
+    });
+
+    groupEndBtn.addEventListener('click', () => {
+      console.groupEnd();           
+    });
+
+    tableBtn.addEventListener('click', () => {
+      console.table(users);
+    });
+
+    startTimerBtn.addEventListener('click', () => {
+      console.time('Console Timer Demo');
+    });
+
+    endTimerBtn.addEventListener('click', () => {
+      console.timeEnd('Console Timer Demo');
+    });
+
+    traceBtn.addEventListener('click', () => {
+      function first() { second(); }
+      function second() { third(); }
+      function third() { console.trace('Console Trace Demo'); }
+      first();
+    });
+
+    class ValidationError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'ValidationError';
+      }
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation(); 
+
+      const firstRaw  = document.querySelector('#first-num').value.trim();
+      const secondRaw = document.querySelector('#second-num').value.trim();
+      const operator  = document.querySelector('#operator').value;
+      const output    = document.querySelector('output');
+
+      try {
+        const first  = Number(firstRaw);
+        const second = Number(secondRaw);
+
+        if (firstRaw === '' || secondRaw === '') {
+          throw new ValidationError('Both inputs are required.');
+        }
+        if (Number.isNaN(first) || Number.isNaN(second)) {
+          throw new ValidationError('Inputs must be valid numbers.');
+        }
+        if (operator === '/' && second === 0) {
+          throw new ValidationError('Division by zero is not allowed.');
+        }
+
+        output.textContent = eval(`${first} ${operator} ${second}`);
+      } catch (err) {
+        if (err instanceof ValidationError) {
+          console.warn('ValidationError:', err.message);
+          output.textContent = `${err.message}`;
+        } else {
+          console.error('Unexpected error:', err);
+          output.textContent = 'Unexpected error – see console';
+        }
+      } finally {
+        console.log('Calculation attempted @', new Date().toLocaleTimeString());
+      }
+    }, true);
+
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.log('Global error caught:', message, `(${source}:${lineno}:${colno})`);
+      if (window.TrackJS) {                  // forward to TrackJS if present
+        window.TrackJS.track(error || message);
+      }
+      return true; 
+    };
+
+    globalErrorBtn.addEventListener('click', () => {
+      nonexistentFunctionCall(); 
+    });
+
+  
+
   </script>
 </body>
 
