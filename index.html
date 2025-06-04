@@ -225,7 +225,7 @@
 
     window.onerror = function (message, source, lineno, colno, error) {
       console.log('Global error caught:', message, `(${source}:${lineno}:${colno})`);
-      if (window.TrackJS) {                  // forward to TrackJS if present
+      if (window.TrackJS) {  
         window.TrackJS.track(error || message);
       }
       return true; 
